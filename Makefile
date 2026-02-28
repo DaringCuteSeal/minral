@@ -2,10 +2,10 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -O3 -Wall -I./raylib-cpp/include -I./deps/raudio/src
+CXXFLAGS = -g -fsanitize=address -O3 -Wall -I./raylib-cpp/include -I./deps/raudio/src
 
 # Linker flags
-LDFLAGS = -lraylib
+LDFLAGS = -lasan -lraylib 
 
 # Define the executable name
 TARGET = minnral

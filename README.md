@@ -13,11 +13,11 @@ Collect (placeholder) (which appears as (placeholder)) as you go through the obs
 ### Game Engine
 The game engine used in this game is [Raylib](https://raylib.com).
 ### Map Generation
-This game uses procedural map generation. It starts with a small 50x50 map. Each tile of the small map represents 333x333 of actual rendered pixels. The map is stored as a 50x50 grid of booleans. True marks there's a wall tile, and false otherwise. The generation process is as follows:
+This game uses procedural map generation. It starts with a small 50x50 map. Each tile of the small map represents 50x50 of actual displayed pixels. The map is stored as a 50x50 grid of tile attributes. There's attribute for wall tiles, platform tiles, and blank spaces (and maybe more but not too significant to write here). The generation process is as follows:
 1. The bottom row is entirely blank (set to false). This is used as the "core" of the planet.
 2. Recursively mark a random row (choose from the third-first row until the third-last row) as false (and then run the same thing for both created sides). This process stops when the number of the available rows to choose from is 1 (just one gap that has to be left). There's a 20% chance that the recursion stops randomly too, to increase the randomesss of the generated map.
 3. Make the start and stop of each row random. The starting point will be picked from [0, 49], and the length is chosen at random (minimum of 2). This works from top to bottom. For each of the row, the rows i made such that the x-axis overlaps with the previous row.
-4. Create between 1 to 3 connection from one row to the bottom row(s) for all of the existing rows. At least one of them is going to connect to the next row, but the rest may be for other rows at the bottom. This constraint makes sure that there will always be way to go down (or conversely up).
+4. Create between 1 to 3 connection from one row to the row at the bottom of it for all the existing rows.
 
 After that, the map is rendered for the player by sampling 80x80
 
