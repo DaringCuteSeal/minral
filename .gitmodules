@@ -1,0 +1,3 @@
+[submodule "minnral/raylib-cpp"]
+	path = minnral/raylib-cpp
+	url = https://github.com/RobLoach/raylib-cpp
