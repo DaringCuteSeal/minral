@@ -6,8 +6,8 @@
 #include <utility>
 
 #define nl '\n'
-int REF_MAP_HEIGHT = 90; // 0->20 nothing, 70->90 the core
-int REF_MAP_WIDTH = 50;
+#define REF_MAP_HEIGHT 51 // 0->20 nothing, 70->90 the core
+#define REF_MAP_WIDTH 50
 
 // Game file assets begin here
 #define RESOURCES_FILE_PATH "res/res.png"
@@ -36,11 +36,13 @@ enum RefMapAttr {
 	WALL = 1,
 	PLATFORM = 2,
 	TUNNEL = 3,
+	SURFACE = 4,
+	CORE = 5,
 };
 
 class RefMap {
 public:
-	RefMapAttr data[50][50];
+	RefMapAttr data[REF_MAP_HEIGHT][REF_MAP_WIDTH];
 };
 
 class Player {
@@ -80,19 +82,28 @@ RefMap generate_map() {
 
 	// draw the platforms
 	std::vector<int> rows_marked;
-	map_divide_recurse(rows_marked, 2, REF_MAP_HEIGHT-2);
+	map_divide_recurse(rows_marked, 2, REF_MAP_HEIGHT - 3);
 
 	// add mandatory ones
+	for (int a=0; a<REF_MAP_WIDTH; a++) {
+		refmap.data[0][a] = SURFACE;
+	}
 	rows_marked.push_back(0);
-	rows_marked.push_back(REF_MAP_HEIGHT-1);
+
+	for (int a=0; a<REF_MAP_WIDTH; a++) {
+		refmap.data[REF_MAP_HEIGHT - 1][a] = CORE;
+	}
+	rows_marked.push_back(REF_MAP_HEIGHT - 1);
 
 	// sort everything
 	std::sort(rows_marked.begin(), rows_marked.end());
 
 	// draw the connectors
 	for (int i = 0; i < int(rows_marked.size()); i++) {
-		for (int a=0; a<REF_MAP_WIDTH; a++) {
-			refmap.data[rows_marked[i]][a] = PLATFORM;
+		if (refmap.data[rows_marked[i]][0] != CORE && refmap.data[i][0] != SURFACE) {
+			for (int a=0; a<REF_MAP_WIDTH; a++) {
+				refmap.data[rows_marked[i]][a] = PLATFORM;
+			}
 		}
 
 		// kinda sloppy imagine being so unlucky
@@ -125,8 +136,8 @@ void game_init() {
 	std::cout << "(DBG) GENERATED MAP: " << nl;
 
 	auto map = generate_map();
-	for (int y = 0; y < 50; y++) {
-		for (int x = 0; x < 50; x++) {
+	for (int y = 0; y < REF_MAP_HEIGHT; y++) {
+		for (int x = 0; x < REF_MAP_WIDTH; x++) {
 			char c;
 
 			switch (map.data[y][x]) {
@@ -134,6 +145,8 @@ void game_init() {
 				case WALL:        c = '#'; break;
 				case PLATFORM:    c = '-'; break;
 				case TUNNEL:      c = '|'; break;
+				case SURFACE:     c = '"'; break;
+				case CORE:        c = '*'; break;
 				default:          c = '?'; break;
 			}
 
@@ -145,8 +158,7 @@ void game_init() {
 
 
 	// load assets
-	LoadTexture(const char *fileName)
-	SetTextureFilter(, TEXTURE_FILTER_POINT).
+	// SetTextureFilter(, TEXTURE_FILTER_POINT).
 
 }
 
