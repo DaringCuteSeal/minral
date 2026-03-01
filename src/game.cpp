@@ -8,56 +8,61 @@
 #define nl '\n'
 #define REF_MAP_HEIGHT 51 // 0->20 nothing, 70->90 the core
 #define REF_MAP_WIDTH 50
+#define ACTUAL_TILE_PIXELS 128
 
 // Game file assets begin here
 #define RESOURCES_FILE_PATH "res/res.png"
 #define BGMUSIC_FILE_PATH "res/music.wav"
-//name, coord y-x, width height
-std::unordered_map<std::string, std::pair<std::pair<int, int>, std::pair<int, int>>> resources = {
-	{"player_walk_1", {{192, 210}, {16, 16}}},
-	{"player_walk_2", {{211, 210}, {16, 16}}},
-	{"player_walk_3", {{230, 210}, {16, 16}}},
-	{"player_walk_4", {{249, 210}, {16, 16}}},
-	{"player_walk_5", {{268, 210}, {16, 16}}},
-	{"player_walk_6", {{287, 210}, {16, 16}}},
-	{"player_walk_7", {{306, 210}, {16, 16}}},
-	{"player_walk_7", {{306, 210}, {16, 16}}},
-	{"player_idle1", {{125,195}, {16,16}}},
-	{"player_idle2", {{441,221}, {16,16}}},
-	{"hook", {{239, 118}, {8, 7}}},
-	{"wall1", {{113, 362}, {16, 16}}},
-	{"wall2", {{134, 349}, {16, 16}}},
-	{"wall3", {{134, 371}, {16, 16}}},
-	{"surface", {{70, 453}, {16, 16}}},
-	{"core_earth", {{80,343}, {16,16}}},
-	{"lava", {{81,369}, {16,16}}},
-	{"spike", {66,378}, {9,7}}},
-	{"hook", {{237,117}, {8,7}}},
-	{"gem_on_profile", {246,160}, {14,9}}},
-	{"playerhealth_bar_1full",{202,161}, {36,10}}},
-	{"playerhealth_bar_2", {202,149},{36,10}}},
-	{"playerhealth_bar_3",{202,138},{36,10}}},
-	{"playerhealth_bar_4",{203,173},{36,10}}},
-	{"playerhealth_bar_5",{203,185},{36,10}}},
-	{"playerhealth_bar_6empty",{203,195},{36,10}}},
-	{"timer_1full", {15,306},{45,17}}},
-	{"timer_2",{15,325},{45,17}}},
-	{"timer_3",{15,346},{45,15}}},
-	{"timer_4",{15,365},{45,15}}},
-	{"timer_5",{14,386},{45,14}}},
-	{"timer_6empty", {14,410}, {45,9}}},
-	{"spider_enemy_idle1", {251,359},{16,16}}},
-	{"spider_enemy_idle2",{270,359},{16,16}}},
-	{"mouse_enemy_walk1",{474,277},{17,12}}},
-	{"mouse_enemy_walk2",{475,322},{18,11}}},
-	{"mouse_enemy_roll",{439,358},{15,15}}},
-	{"play_button_aka_dig", {31,23},{74,25}}},
-	{"leaderboard_button",{31,52}, {74,25}}},
-	
 
+struct AssetRect {
+    int x;
+    int y;
+    int w;
+    int h;
 };
 
-Texture2D assets;
+// Assets map
+std::unordered_map<std::string, AssetRect> assets = {
+    {"player_walk_1",        {192, 210, 16, 16}},
+    {"player_walk_2",        {211, 210, 16, 16}},
+    {"player_walk_3",        {230, 210, 16, 16}},
+    {"player_walk_4",        {249, 210, 16, 16}},
+    {"player_walk_5",        {268, 210, 16, 16}},
+    {"player_walk_6",        {287, 210, 16, 16}},
+    {"player_walk_7",        {306, 210, 16, 16}},
+    {"player_idle1",         {125, 195, 16, 16}},
+    {"player_idle2",         {441, 221, 16, 16}},
+    {"hook",                 {237, 117, 8, 7}},
+    {"wall1",                {113, 362, 16, 16}},
+    {"wall2",                {134, 349, 16, 16}},
+    {"wall3",                {134, 371, 16, 16}},
+    {"surface",              {70, 453, 16, 16}},
+    {"core_earth",           {80, 343, 16, 16}},
+    {"lava",                 {81, 369, 16, 16}},
+    {"spike",                {66, 378, 9, 7}},
+    {"gem_on_profile",       {246, 160, 14, 9}},
+    {"playerhealth_bar_1full",{202, 161, 36, 10}},
+    {"playerhealth_bar_2",   {202, 149, 36, 10}},
+    {"playerhealth_bar_3",   {202, 138, 36, 10}},
+    {"playerhealth_bar_4",   {203, 173, 36, 10}},
+    {"playerhealth_bar_5",   {203, 185, 36, 10}},
+    {"playerhealth_bar_6empty",{203, 195, 36, 10}},
+    {"timer_1full",          {15, 306, 45, 17}},
+    {"timer_2",              {15, 325, 45, 17}},
+    {"timer_3",              {15, 346, 45, 15}},
+    {"timer_4",              {15, 365, 45, 15}},
+    {"timer_5",              {14, 386, 45, 14}},
+    {"timer_6empty",         {14, 410, 45, 9}},
+    {"spider_enemy_idle1",   {251, 359, 16, 16}},
+    {"spider_enemy_idle2",   {270, 359, 16, 16}},
+    {"mouse_enemy_walk1",    {474, 277, 17, 12}},
+    {"mouse_enemy_walk2",    {475, 322, 18, 11}},
+    {"mouse_enemy_roll",     {439, 358, 15, 15}},
+    {"play_button_aka_dig",  {31, 23, 74, 25}},
+    {"leaderboard_button",   {31, 52, 74, 25}}
+};
+
+Texture2D assets_file;
 
 // Classes etc begin here
 enum RefMapAttr {
@@ -70,22 +75,24 @@ enum RefMapAttr {
 };
 
 class RefMap {
-public:
-	RefMapAttr data[REF_MAP_HEIGHT][REF_MAP_WIDTH];
+	public:
+		RefMapAttr data[REF_MAP_HEIGHT][REF_MAP_WIDTH];
 };
 
 class Player {
-private:
-public:
-	Vector2 position;
-	Player(Vector2 position) {
-		this->position = position;
-	};
+	private:
+	public:
+		Vector2 position;
+		Vector2 position_refmap;
+		Player(Vector2 position) {
+			this->position = position;
+		};
 
-	void draw() {
-
-
-	}
+		void draw() {
+			AssetRect ar = assets["player_walk_1"];
+			Rectangle rec = { float(ar.x), float(ar.y), float(ar.w), float(ar.h) };
+			DrawTextureRec(assets_file, rec, Vector2Subtract(this->position, Vector2{8,8}), WHITE);
+		}
 };
 
 // Game functions begin here
@@ -98,7 +105,6 @@ void map_divide_recurse(std::vector<int>& rows, int start, int end) {
 	rows.push_back(picked);
 	map_divide_recurse(rows, start+2, picked-2);
 	map_divide_recurse(rows, picked+2, end-2);
-	
 }
 
 RefMap generate_map() {
@@ -151,7 +157,7 @@ RefMap generate_map() {
 			}
 		}
 	}
-	
+
 	return refmap;
 }
 
@@ -185,9 +191,7 @@ void game_init() {
 	}
 	int spacing = 0;
 
-
-	// load assets
-	// SetTextureFilter(, TEXTURE_FILTER_POINT).
+	assets_file = LoadTexture(RESOURCES_FILE_PATH);
 
 }
 
@@ -198,12 +202,22 @@ void game_draw() {
 
 	BeginMode2D(camera);
 
+	player.draw();
+
 	EndMode2D();
 
 	EndDrawing();
 }
 
 void game_update() {
-	camera.target = player.position;
+		camera.target = raylib::Vector2(std::clamp(player.position.x + 8, float(SCREEN_WIDTH/2.0), float(ACTUAL_TILE_PIXELS * REF_MAP_WIDTH - SCREEN_WIDTH/2.0)), std::clamp(player.position.y + 8, float(SCREEN_WIDTH/2.0), float(ACTUAL_TILE_PIXELS * REF_MAP_WIDTH - SCREEN_HEIGHT/2.0)));
 
+	if (IsKeyDown(KEY_RIGHT)) {
+		if (player.position.x <= ACTUAL_TILE_PIXELS * REF_MAP_WIDTH) player.position.x += 10.0;
+	}
+	if (IsKeyDown(KEY_LEFT)) {
+		player.position.x -= 10.0;
+	}
+
+	player.position = raylib::Vector2(std::clamp(player.position.x, float(0.0), float(ACTUAL_TILE_PIXELS*REF_MAP_WIDTH)), std::clamp(player.position.y, float(0.0), float(ACTUAL_TILE_PIXELS*REF_MAP_WIDTH)));
 }
