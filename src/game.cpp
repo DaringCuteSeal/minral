@@ -93,8 +93,20 @@ class Player {
 
 		void draw() {
 			AssetRect ar = assets["player_walk_1"];
-			Rectangle rec = { float(ar.x), float(ar.y), float(ar.w), float(ar.h) };
-			DrawTextureRec(assets_file, rec, Vector2Subtract(this->position, Vector2{8,8}), WHITE);
+
+			Rectangle source = { (float)ar.x, (float)ar.y, (float)ar.w, (float)ar.h };
+
+			float scale = 8.0f;
+			Rectangle dest = { 
+				this->position.x, 
+				this->position.y, 
+				ar.w * scale, 
+				ar.h * scale 
+			};
+
+			Vector2 origin = { (ar.w * scale) / 2.0f, (ar.h * scale) / 2.0f };
+
+			DrawTexturePro(assets_file, source, dest, origin, 0.0f, WHITE);
 		}
 };
 
@@ -165,6 +177,7 @@ raylib::Camera2D camera(raylib::Vector2(SCREEN_WIDTH/2.0f, SCREEN_HEIGHT/2.0f), 
 // Game functions
 void game_init() {
 	std::cout << "(DBG) GENERATED MAP: " << nl;
+	camera.zoom = 1.0;
 
 	auto map = generate_map();
 	for (int y = 0; y < REF_MAP_HEIGHT; y++) {
@@ -186,6 +199,7 @@ void game_init() {
 	}
 
 	assets_file = LoadTexture(RESOURCES_FILE_PATH);
+	SetTextureFilter(assets_file, TEXTURE_FILTER_POINT);
 }
 
 void game_draw() {
