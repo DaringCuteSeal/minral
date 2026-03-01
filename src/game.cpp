@@ -21,7 +21,6 @@ std::unordered_map<std::string, std::pair<std::pair<int, int>, std::pair<int, in
 	{"player_walk_5", {{268, 210}, {16, 16}}},
 	{"player_walk_6", {{287, 210}, {16, 16}}},
 	{"player_walk_7", {{306, 210}, {16, 16}}},
-	{"player_walk_7", {{306, 210}, {16, 16}}},
 	{"hook", {{239, 118}, {8, 7}}},
 	{"wall1", {{113, 362}, {16, 16}}},
 	{"wall2", {{134, 349}, {16, 16}}},
@@ -39,7 +38,8 @@ enum RefMapAttr {
 	TUNNEL = 3,
 	SURFACE = 4,
 	CORE = 5,
-	BUCKET = 6
+	BUCKET = 6,
+	PLATFORM_SPIKE = 7
 };
 
 class RefMap {
@@ -89,6 +89,9 @@ RefMap generate_map() {
 	std::vector<int> rows_marked;
 	map_divide_recurse(rows_marked, 3, REF_MAP_HEIGHT - 3);
 
+	// probability (percent) that a given platform tile becomes a spike
+	const int SPIKE_CHANCE = 10; // 10% chance per tile
+
 	// add mandatory ones
 	for (int a=0; a<REF_MAP_WIDTH; a++) {
 		refmap.data[1][a] = SURFACE;
@@ -109,7 +112,12 @@ RefMap generate_map() {
 	for (int i = 0; i < int(rows_marked.size()); i++) {
 		if (refmap.data[rows_marked[i]][0] != CORE && refmap.data[rows_marked[i]][0] != SURFACE) {
 			for (int a=0; a<REF_MAP_WIDTH; a++) {
-				refmap.data[rows_marked[i]][a] = PLATFORM;
+				// decide whether this tile becomes a spike
+				if (GetRandomValue(0, 99) < SPIKE_CHANCE) {
+					refmap.data[rows_marked[i]][a] = PLATFORM_SPIKE;
+				} else {
+					refmap.data[rows_marked[i]][a] = PLATFORM;
+				}
 			}
 		}
 
@@ -150,6 +158,7 @@ void game_init() {
 				case BLANK_SPACE: c = '.'; break;
 				case WALL:        c = '#'; break;
 				case PLATFORM:    c = '-'; break;
+			case PLATFORM_SPIKE: c = '^'; break;
 				case TUNNEL:      c = '|'; break;
 				case SURFACE:     c = '"'; break;
 				case BUCKET:      c = 'v'; break;
