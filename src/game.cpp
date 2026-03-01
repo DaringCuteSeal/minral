@@ -6,7 +6,7 @@
 #include <utility>
 
 #define nl '\n'
-#define REF_MAP_HEIGHT 51 // 0->20 nothing, 70->90 the core
+#define REF_MAP_HEIGHT 51
 #define REF_MAP_WIDTH 50
 #define ACTUAL_TILE_PIXELS 128
 
@@ -23,7 +23,7 @@ struct AssetRect {
 };
 
 // Assets map using struct
-std::unordered_map<std::string, AssetRect> assets = {
+ std::unordered_map<std::string, AssetRect> assets = {
 	{"player_walk_1",        {192, 210, 16, 16}},
 	{"player_walk_2",        {211, 210, 16, 16}},
 	{"player_walk_3",        {230, 210, 16, 16}},
@@ -60,7 +60,11 @@ std::unordered_map<std::string, AssetRect> assets = {
 	{"mouse_enemy_walk2",    {475, 322, 18, 11}},
 	{"mouse_enemy_roll",     {439, 358, 15, 15}},
 	{"play_button_aka_dig",  {31, 23, 74, 25}},
-	{"leaderboard_button",   {31, 52, 74, 25}}
+	{"leaderboard_button",   {31, 52, 74, 25}},
+	{"leaderboard_time",     {209, 44, 161, 94}},
+	{"results",              {50, 96, 161, 94}},
+	{"leaderboard_kills",    {231, 174, 161, 94}},
+	{"cordtum",              {30, 3, 72, 18}}
 };
 
 Texture2D assets_file;
